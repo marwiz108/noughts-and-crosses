@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strconv"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -32,6 +33,32 @@ func newGame() Game {
 	return g
 }
 
+func makeMove(row int, col int) {
+	valid := validateMove(row, col)
+
+	if valid == true {
+		game.Board[row][col] = game.Player
+	}
+}
+
+func validateMove(row int, col int) bool {
+	if game.Board[row][col] != "-" {
+		fmt.Println("Box already checked. Choose another box.")
+		return false
+	}
+	return true
+}
+
+func switchTurns() Game {
+	if game.Player == "X" {
+		game.Player = "O"
+	} else {
+		game.Player = "X"
+	}
+
+	return game
+}
+
 func getGame(w http.ResponseWriter, r *http.Request) {
 	// w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(game)
@@ -39,6 +66,22 @@ func getGame(w http.ResponseWriter, r *http.Request) {
 
 func createNewGame(w http.ResponseWriter, r *http.Request) {
 	//
+}
+
+func updateBoard(w http.ResponseWriter, r *http.Request) {
+	params := r.URL.Query()
+	row, err := strconv.Atoi(params["row"][0])
+	if err != nil {
+		fmt.Println(err)
+	}
+	col, e := strconv.Atoi(params["col"][0])
+	if e != nil {
+		fmt.Println(e)
+	}
+	makeMove(row, col)
+	switchTurns()
+	fmt.Println(game.Board)
+	fmt.Println(game.Player)
 }
 
 func handleRequests() {
@@ -51,8 +94,9 @@ func handleRequests() {
 	// 	}
 	// }
 
+	// router.HandleFunc("/newgame", createNewGame).Methods("POST")
 	router.HandleFunc("/game", getGame).Methods("GET")
-	// router.HandleFunc("/move", updateBoard).Methods("POST")
+	router.HandleFunc("/move", updateBoard).Methods("POST")
 	log.Fatal(http.ListenAndServe(":9000", router))
 }
 
