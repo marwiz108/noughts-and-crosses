@@ -96,7 +96,7 @@ func handleRequests() {
 
 	// router.HandleFunc("/newgame", createNewGame).Methods("POST")
 	router.HandleFunc("/game", getGame).Methods("GET")
-	router.HandleFunc("/move", updateBoard).Methods("POST")
+	router.HandleFunc("/move", updateBoard).Methods("PUT")
 	log.Fatal(http.ListenAndServe(":9000", router))
 }
 
