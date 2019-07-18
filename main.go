@@ -38,6 +38,7 @@ func makeMove(row int, col int) {
 
 	if valid == true {
 		game.Board[row][col] = game.Player
+		switchTurns()
 	}
 }
 
@@ -46,6 +47,9 @@ func validateMove(row int, col int) bool {
 		fmt.Println("Box already checked. Choose another box.")
 		return false
 	}
+
+	// TODO - add in check for winning combos
+	// if winning combo, declare winner & endGame
 	return true
 }
 
@@ -79,7 +83,6 @@ func updateBoard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(e)
 	}
 	makeMove(row, col)
-	switchTurns()
 	fmt.Println(game.Board)
 	fmt.Println(game.Player)
 }
