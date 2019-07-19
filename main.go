@@ -118,6 +118,7 @@ func endGame() string {
 
 func createNewGame(w http.ResponseWriter, r *http.Request) {
 	game = newGame()
+	json.NewEncoder(w).Encode(game)
 }
 
 func getGame(w http.ResponseWriter, r *http.Request) {
@@ -144,9 +145,11 @@ func updateBoard(w http.ResponseWriter, r *http.Request) {
 	v := validateMove(row, col)
 	if v != "valid" {
 		json.NewEncoder(w).Encode(v)
+		json.NewEncoder(w).Encode(game)
 		return
 	}
 	json.NewEncoder(w).Encode(makeMove(row, col))
+	json.NewEncoder(w).Encode(game)
 }
 
 func handleRequests() {
