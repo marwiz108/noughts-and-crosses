@@ -37,6 +37,9 @@ func newGame() Game {
 
 func makeMove(row int, col int) string {
 	game.Board[row][col] = game.Player
+	if isWinner() == true {
+		return declareWinner(game.Player)
+	}
 	switchTurns()
 
 	return "Next player turn"
@@ -65,13 +68,38 @@ func switchTurns() Game {
 	return game
 }
 
-func getGame(w http.ResponseWriter, r *http.Request) {
-	// w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(game)
+func isWinner() bool {
+	for x := 0; x < 3; x++ {
+		if game.Board[x][0] != "-" && (game.Board[x][0] == game.Player && game.Board[x][1] == game.Player && game.Board[x][2] == game.Player) {
+			return true
+		}
+	}
+	for y := 0; y < 3; y++ {
+		if game.Board[0][y] != "-" && (game.Board[0][y] == game.Player && game.Board[1][y] == game.Player && game.Board[2][y] == game.Player) {
+			return true
+		}
+	}
+	if game.Board[1][1] != "-" && (game.Board[0][0] == game.Player && game.Board[1][1] == game.Player && game.Board[2][2] == game.Player) {
+		return true
+	}
+	if game.Board[1][1] != "-" && (game.Board[0][2] == game.Player && game.Board[1][1] == game.Player && game.Board[2][0] == game.Player) {
+		return true
+	}
+	return false
+}
+
+func declareWinner(p string) string {
+	game.Winner = ("Player " + game.Player)
+	return ("Player " + game.Player + " wins!")
 }
 
 func createNewGame(w http.ResponseWriter, r *http.Request) {
 	game = newGame()
+}
+
+func getGame(w http.ResponseWriter, r *http.Request) {
+	// w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(game)
 }
 
 func updateBoard(w http.ResponseWriter, r *http.Request) {
@@ -93,7 +121,6 @@ func updateBoard(w http.ResponseWriter, r *http.Request) {
 	}
 	move := makeMove(row, col)
 	json.NewEncoder(w).Encode(move)
-	json.NewEncoder(w).Encode(game)
 }
 
 func handleRequests() {
