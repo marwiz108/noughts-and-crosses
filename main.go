@@ -34,26 +34,23 @@ func newGame() Game {
 }
 
 func makeMove(row int, col int) string {
-	valid := validateMove(row, col)
-
-	if valid == false {
-		return "Box already checked. Choose another box."
-	}
 	game.Board[row][col] = game.Player
 	switchTurns()
 
 	return "Next player turn"
 }
 
-func validateMove(row int, col int) bool {
+func validateMove(row int, col int) string {
+	if (row > 2 || col > 2) {
+		return "Board position does not exist."
+	}
 	if game.Board[row][col] != "-" {
-		fmt.Println("Box already checked. Choose another box.")
-		return false
+		return "Box already checked. Choose another box."
 	}
 
 	// TODO - add in check for winning combos
 	// if winning combo, declare winner & endGame
-	return true
+	return "valid"
 }
 
 func switchTurns() Game {
@@ -87,8 +84,9 @@ func updateBoard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(e)
 		return
 	}
-	if (row > 2) || (col > 2) {
-		json.NewEncoder(w).Encode("Board position does not exist.")
+	v := validateMove(row, col)
+	if v != "valid" {
+		json.NewEncoder(w).Encode(v)
 		return
 	}
 	move := makeMove(row, col)
