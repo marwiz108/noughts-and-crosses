@@ -39,4 +39,6 @@ e.g. `PUT http://localhost:9000/move?row=0&col=2`
 
 The json structure of the Game board is shown as a linear array, so it's not displayed as the actual visual of a noughts and crosses box. This can make it difficult to visualise the board however with frontend views this can be solved.
 
+After making the full app work on one page, I decided to separate out the responsibilities into the `app` directory to have a cleaner layout. *There are differing opinions as to what file structure is best to use, so I implemented a simple structure separating out models, api routes, service and views.*
+
 The next step would be to have the two players playing remotely through the API.
