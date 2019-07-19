@@ -18,7 +18,6 @@ type Game struct {
 	Winner string `json:"winner"`
 }
 
-// Init games var as a slice of Game struct
 var game Game
 
 func newGame() Game {
@@ -61,22 +60,27 @@ func switchTurns() string {
 		game.Player = "X"
 	}
 
-	return "Next player turn"
+	return "Next player turn" // technically this is not needed but is good for confirmation in postman
 }
 
 func checkWinner() {
+	// Horizontal wins
 	for x := 0; x < 3; x++ {
 		if game.Board[x][0] != "-" && (game.Board[x][0] == game.Player && game.Board[x][1] == game.Player && game.Board[x][2] == game.Player) {
 			game.Winner = "Player " + game.Player
 			return
 		}
 	}
+
+	// Vertical wins
 	for y := 0; y < 3; y++ {
 		if game.Board[0][y] != "-" && (game.Board[0][y] == game.Player && game.Board[1][y] == game.Player && game.Board[2][y] == game.Player) {
 			game.Winner = "Player " + game.Player
 			return
 		}
 	}
+
+	// Diagonal wins
 	if game.Board[1][1] != "-" && (game.Board[0][0] == game.Player && game.Board[1][1] == game.Player && game.Board[2][2] == game.Player) {
 		game.Winner = "Player " + game.Player
 		return
@@ -123,23 +127,26 @@ func getGame(w http.ResponseWriter, r *http.Request) {
 
 func updateBoard(w http.ResponseWriter, r *http.Request) {
 	params := r.URL.Query()
+
+	// Convert row param to int
 	row, err := strconv.Atoi(params["row"][0])
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	// Convert column param to int
 	col, e := strconv.Atoi(params["col"][0])
 	if e != nil {
 		fmt.Println(e)
 		return
 	}
+
 	v := validateMove(row, col)
 	if v != "valid" {
 		json.NewEncoder(w).Encode(v)
 		return
 	}
-	move := makeMove(row, col)
-	json.NewEncoder(w).Encode(move)
+	json.NewEncoder(w).Encode(makeMove(row, col))
 }
 
 func handleRequests() {
