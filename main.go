@@ -36,12 +36,11 @@ func newGame() Game {
 
 func makeMove(row int, col int) string {
 	game.Board[row][col] = game.Player
-	if isWinner() == true {
-		return declareWinner(game.Player)
+	checkWinner()
+	if game.Winner == "" {
+		return switchTurns()
 	}
-	switchTurns()
-
-	return "Next player turn"
+	return endGame()
 }
 
 func validateMove(row int, col int) string {
@@ -145,12 +144,6 @@ func updateBoard(w http.ResponseWriter, r *http.Request) {
 
 func handleRequests() {
 	router := mux.NewRouter().StrictSlash(true)
-
-	// for x, a := range game.Board {
-	// 	for y, _ := range a {
-	// 		fmt.Println(x, y)
-	// 	}
-	// }
 
 	router.HandleFunc("/newgame", createNewGame).Methods("POST")
 	router.HandleFunc("/game", getGame).Methods("GET")
