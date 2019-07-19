@@ -80,10 +80,16 @@ func updateBoard(w http.ResponseWriter, r *http.Request) {
 	row, err := strconv.Atoi(params["row"][0])
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 	col, e := strconv.Atoi(params["col"][0])
 	if e != nil {
 		fmt.Println(e)
+		return
+	}
+	if (row > 2) || (col > 2) {
+		json.NewEncoder(w).Encode("Board position does not exist.")
+		return
 	}
 	move := makeMove(row, col)
 	json.NewEncoder(w).Encode(move)
