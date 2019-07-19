@@ -52,44 +52,65 @@ func validateMove(row int, col int) string {
 		return "Box already checked. Choose another box."
 	}
 
-	// TODO - add in check for winning combos
-	// if winning combo, declare winner & endGame
 	return "valid"
 }
 
-func switchTurns() Game {
+func switchTurns() string {
 	if game.Player == "X" {
 		game.Player = "O"
 	} else {
 		game.Player = "X"
 	}
 
-	return game
+	return "Next player turn"
 }
 
-func isWinner() bool {
+func checkWinner() {
 	for x := 0; x < 3; x++ {
 		if game.Board[x][0] != "-" && (game.Board[x][0] == game.Player && game.Board[x][1] == game.Player && game.Board[x][2] == game.Player) {
-			return true
+			game.Winner = "Player " + game.Player
+			return
 		}
 	}
 	for y := 0; y < 3; y++ {
 		if game.Board[0][y] != "-" && (game.Board[0][y] == game.Player && game.Board[1][y] == game.Player && game.Board[2][y] == game.Player) {
-			return true
+			game.Winner = "Player " + game.Player
+			return
 		}
 	}
 	if game.Board[1][1] != "-" && (game.Board[0][0] == game.Player && game.Board[1][1] == game.Player && game.Board[2][2] == game.Player) {
-		return true
+		game.Winner = "Player " + game.Player
+		return
 	}
 	if game.Board[1][1] != "-" && (game.Board[0][2] == game.Player && game.Board[1][1] == game.Player && game.Board[2][0] == game.Player) {
-		return true
+		game.Winner = "Player " + game.Player
+		return
 	}
-	return false
+
+	// Check if board is full - NO WINNER
+	if fullBoard() == true {
+		game.Winner = "NONE"
+		return
+	}
 }
 
-func declareWinner(p string) string {
-	game.Winner = ("Player " + game.Player)
-	return ("Player " + game.Player + " wins!")
+func fullBoard() bool {
+	for x, a := range game.Board {
+		for y := range a {
+			if game.Board[x][y] == "-" {
+				return false
+			}
+			continue
+		}
+	}
+	return true
+}
+
+func endGame() string {
+	if game.Winner != "NONE" {
+		return game.Winner + " wins!"
+	}
+	return "Game Over with no winner"
 }
 
 func createNewGame(w http.ResponseWriter, r *http.Request) {
