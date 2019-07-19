@@ -33,15 +33,16 @@ func newGame() Game {
 	return g
 }
 
-func makeMove(row int, col int) Game {
+func makeMove(row int, col int) string {
 	valid := validateMove(row, col)
 
-	if valid == true {
-		game.Board[row][col] = game.Player
-		switchTurns()
+	if valid == false {
+		return "Box already checked. Choose another box."
 	}
+	game.Board[row][col] = game.Player
+	switchTurns()
 
-	return game
+	return "Next player turn"
 }
 
 func validateMove(row int, col int) bool {
@@ -84,7 +85,8 @@ func updateBoard(w http.ResponseWriter, r *http.Request) {
 	if e != nil {
 		fmt.Println(e)
 	}
-	makeMove(row, col)
+	move := makeMove(row, col)
+	json.NewEncoder(w).Encode(move)
 	json.NewEncoder(w).Encode(game)
 }
 
