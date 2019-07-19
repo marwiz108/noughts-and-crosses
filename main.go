@@ -15,6 +15,7 @@ type board [3][3]string
 type Game struct {
 	Board board `json:"board"`
 	Player string `json:"player"`
+	Winner string `json:"winner"`
 }
 
 // Init games var as a slice of Game struct
@@ -28,6 +29,7 @@ func newGame() Game {
 			[3]string{"-", "-", "-"},
 		},
 		Player: "X",
+		Winner: "none",
 	}
 
 	return g
