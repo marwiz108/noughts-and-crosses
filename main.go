@@ -71,7 +71,7 @@ func getGame(w http.ResponseWriter, r *http.Request) {
 }
 
 func createNewGame(w http.ResponseWriter, r *http.Request) {
-	//
+	game = newGame()
 }
 
 func updateBoard(w http.ResponseWriter, r *http.Request) {
@@ -91,14 +91,13 @@ func updateBoard(w http.ResponseWriter, r *http.Request) {
 func handleRequests() {
 	router := mux.NewRouter().StrictSlash(true)
 
-	game = newGame()
 	// for x, a := range game.Board {
 	// 	for y, _ := range a {
 	// 		fmt.Println(x, y)
 	// 	}
 	// }
 
-	// router.HandleFunc("/newgame", createNewGame).Methods("POST")
+	router.HandleFunc("/newgame", createNewGame).Methods("POST")
 	router.HandleFunc("/game", getGame).Methods("GET")
 	router.HandleFunc("/move", updateBoard).Methods("PUT")
 	log.Fatal(http.ListenAndServe(":9000", router))
