@@ -29,7 +29,6 @@ func newGame() Game {
 			[3]string{"-", "-", "-"},
 		},
 		Player: "X",
-		Winner: "none",
 	}
 
 	return g
