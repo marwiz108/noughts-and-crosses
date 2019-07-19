@@ -4,7 +4,10 @@ The aim is to build a service that allows two users to play noughts and crosses 
 
 ## MVP
 
-As this is my first challenge in Go, I have decided that a MVP would be to be able to have two users play on the same computer instead of remotely. The players would be able to select which box (or position) they wanted to place their "X" or "O", using indexes as coordinates. The board would be checked for winning combinations and when there is a winner the game will end and the winner declared. If board is full with no winning combinations, winner will be declared as "NONE".
+As this is my first challenge in Go, I have decided that a MVP would be:
+- The players would be able to select which box (or position) they wanted to place their "X" or "O", using indexes as coordinates.
+- The board would be checked for winning combinations and when there is a winner the game will end and the winner declared.
+- If board is full with no winning combinations, winner will be declared as "NONE".
 
 To get the MVP working I created the program to be played in the terminal, then to add in routing once that was working. However this proved to be more time consuming because the functions were structured differently. Ideally I should have started with the routes as it would have been easier to visualise and save time.
 
@@ -40,5 +43,3 @@ e.g. `PUT http://localhost:9000/move?row=0&col=2`
 The json structure of the Game board is shown as a linear array, so it's not displayed as the actual visual of a noughts and crosses box. This can make it difficult to visualise the board however with frontend views this can be solved.
 
 After making the full app work on one page, I decided to separate out the responsibilities into the `app` directory to have a cleaner layout. *There are differing opinions as to what file structure is best to use, so I implemented a simple structure separating out models, api routes, service and views.*
-
-The next step would be to have the two players playing remotely through the API.
